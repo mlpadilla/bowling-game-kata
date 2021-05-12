@@ -36,5 +36,8 @@ class GameTest : BehaviorSpec({
             frame.roll1
             frame.roll2
         }
+        then("to knock down 10 pins") {
+            frame.pins shouldBe 10
+        }
     }
 })
