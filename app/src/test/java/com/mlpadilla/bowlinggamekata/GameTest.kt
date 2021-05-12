@@ -1,5 +1,6 @@
 package com.mlpadilla.bowlinggamekata
 
+import com.mlpadilla.bowlinggamekata.game.Frame
 import com.mlpadilla.bowlinggamekata.game.Game
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
@@ -25,6 +26,15 @@ class GameTest : BehaviorSpec({
     given("a game") {
         then("the game consists of 10 frames") {
             game.frames.size shouldBe 10
+        }
+    }
+
+    //In each frame the player has two rolls to knock down 10 pins
+    given("a frame") {
+        val frame = Frame()
+        then("the player has two rolls") {
+            frame.roll1
+            frame.roll2
         }
     }
 })

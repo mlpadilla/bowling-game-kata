@@ -1,7 +1,7 @@
 package com.mlpadilla.bowlinggamekata.game
 
 class Game {
-    val frames = List<Frame>(10) { object : Frame {} }
+    val frames = List(10) { Frame() }
 
     fun roll(pinsKnockedDown: Int) {}
 
