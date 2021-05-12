@@ -21,4 +21,10 @@ class GameTest : BehaviorSpec({
             }
         }
     }
+
+    given("a game") {
+        then("the game consists of 10 frames") {
+            game.frames.size shouldBe 10
+        }
+    }
 })
