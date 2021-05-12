@@ -43,6 +43,10 @@ android {
     }
 }
 
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
 dependencies {
 
     implementation("androidx.core:core-ktx:1.3.2")
@@ -57,4 +61,6 @@ dependencies {
     androidTestImplementation("androidx.test.ext:junit:1.1.2")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0")
     androidTestImplementation("androidx.compose.ui:ui-test-junit4:${rootProject.extra["compose_version"]}")
+    testImplementation("io.kotest:kotest-runner-junit5:4.5.0")
+    testImplementation("io.kotest:kotest-assertions-core:4.5.0")
 }
