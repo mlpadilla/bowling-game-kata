@@ -28,16 +28,4 @@ class GameTest : BehaviorSpec({
             game.frames.size shouldBe 10
         }
     }
-
-    //In each frame the player has two rolls to knock down 10 pins
-    given("a frame") {
-        val frame = Frame()
-        then("the player has two rolls") {
-            frame.roll1
-            frame.roll2
-        }
-        then("to knock down 10 pins") {
-            frame.pins shouldBe 10
-        }
-    }
 })
