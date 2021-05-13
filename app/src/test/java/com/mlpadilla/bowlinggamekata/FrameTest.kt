@@ -51,4 +51,17 @@ class FrameTest: BehaviorSpec({
             }
         }
     }
+//    The score for the frame is the total number of pins knocked down, plus bonuses for strikes and spares
+    given("a frame with pins knocked down") {
+        val frame = Frame(
+            roll1 = Roll(2),
+            roll2 = Roll(1)
+        )
+        `when`("checking score") {
+            val pins = frame.score
+            then("the total number of pins knocked down is returned") {
+                pins shouldBe 3
+            }
+        }
+    }
 })
