@@ -55,7 +55,7 @@ class FrameTest: BehaviorSpec({
     given("a frame with pins knocked down") {
         val frame = Frame(
             roll1 = Roll(2),
-            roll2 = Roll(1)
+            roll2 = Roll(1),
         )
         `when`("checking score") {
             val pins = frame.score
