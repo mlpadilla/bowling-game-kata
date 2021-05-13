@@ -78,4 +78,49 @@ class FrameTest: BehaviorSpec({
             }
         }
     }
+    given("A spare with information about next roll") {
+        val frame = Frame(
+            roll1 = Roll(2),
+            roll2 = Roll(8),
+            nextRoll = Roll(5)
+        )
+        then("the bonus for 'spare' is next roll's number of pins knocked down") {
+            frame.bonus shouldBe 5
+            frame.score shouldBe 15
+        }
+    }
+    given("A spare without information about next roll") {
+        val frame = Frame(
+            roll1 = Roll(2),
+            roll2 = Roll(8)
+        )
+
+        then("no bonus for 'spare' is added") {
+            frame.bonus shouldBe 0
+            frame.score shouldBe 10
+        }
+    }
+    given("A frame that is not awarded with 'spare'") {
+        val frame = Frame(
+            roll1 = Roll(2),
+            roll2 = Roll(3)
+        )
+        frame.isSpare shouldBe false
+        then("no bonus for 'spare' is added") {
+            frame.bonus shouldBe 0
+            frame.score shouldBe 5
+        }
+        `when`("next roll is provided") {
+            val frameWithNextRoll = Frame(
+                roll1 = Roll(2),
+                roll2 = Roll(3),
+                nextRoll = Roll(7)
+            )
+            frameWithNextRoll.isSpare shouldBe false
+            then("no bonus for 'spare' is added") {
+                frameWithNextRoll.bonus shouldBe 0
+                frameWithNextRoll.score shouldBe 5
+            }
+        }
+    }
 })
