@@ -50,6 +50,20 @@ class FrameTest: BehaviorSpec({
                 pins shouldBe 5
             }
         }
+        `when`("all 10 pins are knocked down") {
+            val frame = Frame(
+                roll1 = Roll(2),
+                roll2 = Roll(8)
+            )
+            then("this frame is marked as spare") {
+                frame.isSpare shouldBe true
+            }
+        }
+        `when`("not all 10 pins are knocked down") {
+            then("this frame is not marked as spare") {
+                frame.isSpare shouldBe false
+            }
+        }
     }
 //    The score for the frame is the total number of pins knocked down, plus bonuses for strikes and spares
     given("a frame with pins knocked down") {
