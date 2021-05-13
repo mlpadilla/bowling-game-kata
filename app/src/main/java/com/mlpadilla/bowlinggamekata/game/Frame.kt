@@ -6,10 +6,13 @@ data class Frame (
     val nextRoll: Roll? = null
 ) {
     val score: Int get() =
-        (roll1?.pinsKnockedDown ?: 0) + (roll2?.pinsKnockedDown ?: 0) + bonus
+        safePinsKnockedDownValue(roll1) + safePinsKnockedDownValue(roll2) + bonus
     val pins: Int get() = 10 - score
     val isSpare: Boolean = score == 10
-    val bonus: Int = if (isSpare) nextRoll?.pinsKnockedDown ?: 0 else 0
+    val bonus: Int = if (isSpare) safePinsKnockedDownValue(nextRoll) else 0
+
+    private fun safePinsKnockedDownValue(roll: Roll?) =
+        roll?.pinsKnockedDown ?: 0
 }
 
 data class Roll(
