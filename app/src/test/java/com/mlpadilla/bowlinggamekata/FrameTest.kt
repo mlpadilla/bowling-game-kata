@@ -123,4 +123,22 @@ class FrameTest: BehaviorSpec({
             }
         }
     }
+
+//    A strike is when the player knocks down all 10 pins on his first roll
+    given("A frame with one roll") {
+        val frame = Frame(
+            roll1 = Roll(pinsKnockedDown = 10)
+        )
+        `when`("all 10 pins are knocked down") {
+            then("this frame is marked as strike") {
+                frame.isStrike shouldBe true
+            }
+        }
+        `when`("it is marked as strike") {
+            frame.isStrike shouldBe true
+            then("it is not marked as spare") {
+                frame.isSpare shouldBe false
+            }
+        }
+    }
 })

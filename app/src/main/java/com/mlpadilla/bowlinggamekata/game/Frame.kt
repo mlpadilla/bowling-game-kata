@@ -8,7 +8,8 @@ data class Frame (
     val score: Int get() =
         safePinsKnockedDownValue(roll1) + safePinsKnockedDownValue(roll2) + bonus
     val pins: Int get() = 10 - score
-    val isSpare: Boolean = score == 10
+    val isStrike: Boolean = safePinsKnockedDownValue(roll1) == 10
+    val isSpare: Boolean = !isStrike && score == 10
     val bonus: Int = if (isSpare) safePinsKnockedDownValue(nextRoll) else 0
 
     private fun safePinsKnockedDownValue(roll: Roll?) =
