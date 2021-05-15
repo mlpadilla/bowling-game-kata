@@ -124,7 +124,6 @@ class FrameTest: BehaviorSpec({
         }
     }
 
-//    A strike is when the player knocks down all 10 pins on his first roll
     given("A frame with one roll") {
         val frame = Frame.fromRolls(
             roll1 = Roll(pinsKnockedDown = 10)
@@ -139,6 +138,41 @@ class FrameTest: BehaviorSpec({
             then("it is not marked as spare") {
                 frame.shouldNotBeInstanceOf<Frame.FrameWithSpareBonus>()
             }
+        }
+    }
+
+    //The bonus for that frame is the value of the next two rolls
+    given("A strike with information about next two rolls") {
+        val frame = Frame.fromRolls(
+            roll1 = Roll(10),
+            nextRoll = Roll(1),
+            nextSecondRoll = Roll(4)
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+        then("the bonus is the number of pins knocked down on the following two rolls") {
+            frame.bonus shouldBe 5
+            frame.score shouldBe 15
+        }
+    }
+    given("A strike with information about next roll") {
+        val frame = Frame.fromRolls(
+            roll1 = Roll(10),
+            nextRoll = Roll(1),
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+        then("the bonus is the number of pins knocked down on the following roll") {
+            frame.bonus shouldBe 1
+            frame.score shouldBe 11
+        }
+    }
+    given("A strike without information about next rolls") {
+        val frame = Frame.fromRolls(
+            roll1 = Roll(10),
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+        then("no bonus is added") {
+            frame.bonus shouldBe 0
+            frame.score shouldBe 10
         }
     }
 })

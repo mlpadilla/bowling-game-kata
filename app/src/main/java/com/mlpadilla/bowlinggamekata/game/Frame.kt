@@ -7,11 +7,14 @@ sealed interface Frame {
         fun fromRolls(
             roll1: Roll? = null,
             roll2: Roll? = null,
-            nextRoll: Roll? = null
+            nextRoll: Roll? = null,
+            nextSecondRoll: Roll? = null
         ): Frame {
             if (roll1.toScore() == MAXIMUM_SCORE) {
                 return FrameWithStrikeBonus(
-                    roll1 = roll1
+                    roll1 = roll1,
+                    nextRoll,
+                    nextSecondRoll
                 )
             }
             if (roll1.toScore() + roll2.toScore() == MAXIMUM_SCORE) {
@@ -39,15 +42,18 @@ sealed interface Frame {
         override val roll1: Roll?,
         override val roll2: Roll?,
         override val nextRoll: Roll?,
-    ) : Frame, WithSecondRoll, WithNextRoll {
-        val bonus: Int = nextRoll.toScore()
+    ) : Frame, WithBonus, WithSecondRoll, WithNextRoll {
+        override val bonus: Int = nextRoll.toScore()
         override val score: Int = roll1.toScore() + roll2.toScore() + bonus
     }
 
     data class FrameWithStrikeBonus(
-        override val roll1: Roll?
-    ) : Frame {
-        override val score: Int = roll1.toScore()
+        override val roll1: Roll?,
+        override val nextRoll: Roll?,
+        override val nextSecondRoll: Roll?,
+    ) : Frame, WithBonus, WithNextRoll, WithNextSecondRoll {
+        override val bonus: Int = nextRoll.toScore() + nextSecondRoll.toScore()
+        override val score: Int = roll1.toScore() + bonus
     }
 }
 
@@ -57,6 +63,14 @@ interface WithSecondRoll {
 
 interface WithNextRoll {
     val nextRoll: Roll?
+}
+
+interface WithNextSecondRoll {
+    val nextSecondRoll: Roll?
+}
+
+interface WithBonus {
+    val bonus: Int
 }
 
 private fun Roll?.toScore() = this?.pinsKnockedDown ?: 0
