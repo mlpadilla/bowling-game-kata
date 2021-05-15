@@ -85,6 +85,7 @@ class FrameTest: BehaviorSpec({
             }
         }
     }
+
     given("A spare with information about next roll") {
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
@@ -97,6 +98,7 @@ class FrameTest: BehaviorSpec({
             frame.score shouldBe 15
         }
     }
+
     given("A spare without information about next roll") {
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
@@ -108,6 +110,7 @@ class FrameTest: BehaviorSpec({
             frame.score shouldBe 10
         }
     }
+
     given("A frame that is not awarded with 'spare'") {
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
@@ -163,6 +166,7 @@ class FrameTest: BehaviorSpec({
             frame.score shouldBe 15
         }
     }
+
     given("A strike with information about next roll") {
         val frame = Frame.fromRolls(
             roll1 = Roll(10),
@@ -174,6 +178,7 @@ class FrameTest: BehaviorSpec({
             frame.score shouldBe 11
         }
     }
+
     given("A strike without information about next rolls") {
         val frame = Frame.fromRolls(
             roll1 = Roll(10),
