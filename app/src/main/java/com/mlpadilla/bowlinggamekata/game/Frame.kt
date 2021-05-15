@@ -59,8 +59,4 @@ interface WithNextRoll {
     val nextRoll: Roll?
 }
 
-data class Roll(
-    val pinsKnockedDown: Int
-)
-
 private fun Roll?.toScore() = this?.pinsKnockedDown ?: 0
