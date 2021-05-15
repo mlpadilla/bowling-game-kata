@@ -17,7 +17,7 @@ class FrameTest: BehaviorSpec({
             frame.roll2
         }
         then("to knock down 10 pins") {
-            frame.pins shouldBe 10
+            frame.pinsUp shouldBe 10
         }
     }
 
@@ -30,7 +30,7 @@ class FrameTest: BehaviorSpec({
             frame.roll2 shouldBe null
         }
         `when`("checking pins") {
-            val pins = frame.pins
+            val pins = frame.pinsUp
             then("10 - knocked down pins is returned") {
                 pins shouldBe 8
             }
@@ -47,7 +47,7 @@ class FrameTest: BehaviorSpec({
             frame.roll2 shouldNotBe null
         }
         `when`("checking pins") {
-            val pins = frame.pins
+            val pins = frame.pinsUp
             then("10 - knocked down pins is returned") {
                 pins shouldBe 5
             }

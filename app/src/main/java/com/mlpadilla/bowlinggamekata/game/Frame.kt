@@ -26,7 +26,7 @@ sealed interface Frame {
     }
     val roll1: Roll?
     val score: Int
-    val pins: Int get() = TOTAL_NUMBER_OF_PINS - score
+    val pinsUp: Int get() = TOTAL_NUMBER_OF_PINS - score
 
     data class FrameWithNoBonus(
         override val roll1: Roll?,
