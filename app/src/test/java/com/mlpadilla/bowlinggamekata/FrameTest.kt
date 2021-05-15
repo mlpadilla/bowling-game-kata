@@ -11,7 +11,8 @@ import io.kotest.matchers.types.shouldNotBeInstanceOf
 class FrameTest: BehaviorSpec({
 
     given("a frame") {
-        val frame = Frame.fromRolls() as Frame.FrameWithNoBonus
+        val frame = Frame.fromRolls()
+        frame.shouldBeInstanceOf<Frame.FrameWithNoBonus>()
         then("the player has two rolls") {
             frame.roll1
             frame.roll2
@@ -24,7 +25,8 @@ class FrameTest: BehaviorSpec({
     given("a frame with one roll") {
         val frame = Frame.fromRolls(
             roll1 = Roll(2)
-        ) as Frame.FrameWithNoBonus
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithNoBonus>()
         then("first roll is set but second roll isn't") {
             frame.roll1 shouldNotBe null
             frame.roll2 shouldBe null
@@ -41,7 +43,8 @@ class FrameTest: BehaviorSpec({
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
             roll2 = Roll(3)
-        ) as Frame.FrameWithNoBonus
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithNoBonus>()
         then("both rolls should be set") {
             frame.roll1 shouldNotBe null
             frame.roll2 shouldNotBe null
@@ -72,7 +75,8 @@ class FrameTest: BehaviorSpec({
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
             roll2 = Roll(1),
-        ) as Frame.FrameWithNoBonus
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithNoBonus>()
         `when`("checking score") {
             val pins = frame.score
             then("the total number of pins knocked down is returned") {
@@ -85,7 +89,8 @@ class FrameTest: BehaviorSpec({
             roll1 = Roll(2),
             roll2 = Roll(8),
             nextRoll = Roll(5)
-        ) as Frame.FrameWithSpareBonus
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithSpareBonus>()
         then("the bonus for 'spare' is next roll's number of pins knocked down") {
             frame.bonus shouldBe 5
             frame.score shouldBe 15
@@ -95,8 +100,8 @@ class FrameTest: BehaviorSpec({
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
             roll2 = Roll(8)
-        ) as Frame.FrameWithSpareBonus
-
+        )
+        frame.shouldBeInstanceOf<Frame.FrameWithSpareBonus>()
         then("no bonus for 'spare' is added") {
             frame.bonus shouldBe 0
             frame.score shouldBe 10
