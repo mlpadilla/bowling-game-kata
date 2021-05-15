@@ -2,6 +2,7 @@ package com.mlpadilla.bowlinggamekata
 
 import com.mlpadilla.bowlinggamekata.game.Frame
 import com.mlpadilla.bowlinggamekata.game.Roll
+import com.mlpadilla.bowlinggamekata.game.WithSecondRoll
 import io.kotest.core.spec.style.BehaviorSpec
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
@@ -136,6 +137,10 @@ class FrameTest: BehaviorSpec({
         `when`("all 10 pins are knocked down") {
             then("this frame is marked as strike") {
                 frame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+            }
+            then ("strike is completed with one roll") {
+                frame.roll1
+                frame.shouldNotBeInstanceOf<WithSecondRoll>()
             }
         }
         `when`("it is marked as strike") {
