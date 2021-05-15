@@ -71,7 +71,7 @@ class FrameTest: BehaviorSpec({
             }
         }
     }
-//    The score for the frame is the total number of pins knocked down, plus bonuses for strikes and spares
+
     given("a frame with pins knocked down") {
         val frame = Frame.fromRolls(
             roll1 = Roll(2),
@@ -151,7 +151,6 @@ class FrameTest: BehaviorSpec({
         }
     }
 
-    //The bonus for that frame is the value of the next two rolls
     given("A strike with information about next two rolls") {
         val frame = Frame.fromRolls(
             roll1 = Roll(10),
