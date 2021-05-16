@@ -39,6 +39,18 @@ class GameTest : BehaviorSpec({
         then("the initial score is zero") {
             game.score() shouldBe 0
         }
+        `when`("rolling the first ball") {
+            game.roll(pinsKnockedDown = 2)
+            then("the first frame contains the value of the first roll") {
+                game.frames.first()!!.let { firstFrame ->
+                    firstFrame.roll1!!.pinsKnockedDown shouldBe 2
+                    firstFrame.score shouldBe 2
+                }
+            }
+            then("the score of the game is the first roll's score") {
+                game.score() shouldBe 2
+            }
+        }
     }
 
     // In the tenth frame a player who rolls a spare or strike is allowed to roll the extra balls to complete the frame.
