@@ -31,6 +31,14 @@ class GameTest : BehaviorSpec({
         then("the game consists of 10 frames") {
             game.frames.size shouldBe 10
         }
+        then("no frame holds any data") {
+            game.frames.forEach {
+                it shouldBe null
+            }
+        }
+        then("the initial score is zero") {
+            game.score() shouldBe 0
+        }
     }
 
     // In the tenth frame a player who rolls a spare or strike is allowed to roll the extra balls to complete the frame.
