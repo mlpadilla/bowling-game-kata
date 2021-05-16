@@ -101,6 +101,33 @@ class GameTest : BehaviorSpec({
         }
     }
 
+    given("a game (that will register a strike)") {
+        val game = Game()
+        `when`("registering two rolls knocking down 10 and 8 pins") {
+            game.roll(10)
+            game.roll(8)
+            then("the first frame is a strike") {
+                game.frames.first()!!.let { firstFrame ->
+                    firstFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+                    firstFrame.roll1!!.pinsKnockedDown shouldBe 10
+                    firstFrame.score shouldBe 10
+                }
+            }
+            then("the second frame has a first roll of 8 points") {
+                game.frames[1]!!.let { secondFrame ->
+                    secondFrame.roll1!!.pinsKnockedDown shouldBe 8
+                    secondFrame.score shouldBe 8
+                }
+            }
+            then("the game registers two frames in total") {
+                game.frames.filterNotNull().size shouldBe 2
+            }
+            then("rolls are registered in the game score") {
+                game.score() shouldBe 18
+            }
+        }
+    }
+
     // In the tenth frame a player who rolls a spare or strike is allowed to roll the extra balls to complete the frame.
     //TODO Update Game tests for roll/frame update sequence considering newly defined rules.
     // Then enable these tests.
