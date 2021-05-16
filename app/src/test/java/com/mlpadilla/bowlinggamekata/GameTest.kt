@@ -53,6 +53,54 @@ class GameTest : BehaviorSpec({
         }
     }
 
+    given("a game (that will register a no-bonus frame)") {
+        val game = Game()
+        `when`("registering two rolls knocking down 2 and 3 pins") {
+            game.roll(2)
+            game.roll(3)
+            val firstFrame = game.frames.first()!!
+            then("frame has no bonus") {
+                firstFrame.shouldBeInstanceOf<Frame.FrameWithNoBonus>()
+            }
+            then("both rolls are registered for the same frame") {
+                game.frames.first()!!.let { firstFrame ->
+                    require(firstFrame is Frame.FrameWithNoBonus)
+                    firstFrame.roll1!!.pinsKnockedDown shouldBe 2
+                    firstFrame.roll2!!.pinsKnockedDown shouldBe 3
+                    firstFrame.score shouldBe 5
+                }
+                game.frames.filterNotNull().size shouldBe 1
+            }
+            then("rolls are registered in the game score") {
+                game.score() shouldBe 5
+            }
+        }
+    }
+
+    given("a game (that will register a spare)") {
+        val game = Game()
+        `when`("registering two rolls knocking down 2 and 8 pins") {
+            game.roll(2)
+            game.roll(8)
+            val firstFrame = game.frames.first()!!
+            then("frame is a spare") {
+                firstFrame.shouldBeInstanceOf<Frame.FrameWithSpareBonus>()
+            }
+            then("both rolls are registered for the same frame") {
+                game.frames.first()!!.let { firstFrame ->
+                    require(firstFrame is Frame.FrameWithSpareBonus)
+                    firstFrame.roll1!!.pinsKnockedDown shouldBe 2
+                    firstFrame.roll2!!.pinsKnockedDown shouldBe 8
+                    firstFrame.score shouldBe 10
+                }
+                game.frames.filterNotNull().size shouldBe 1
+            }
+            then("rolls are registered in the game score") {
+                game.score() shouldBe 10
+            }
+        }
+    }
+
     // In the tenth frame a player who rolls a spare or strike is allowed to roll the extra balls to complete the frame.
     //TODO Update Game tests for roll/frame update sequence considering newly defined rules.
     // Then enable these tests.

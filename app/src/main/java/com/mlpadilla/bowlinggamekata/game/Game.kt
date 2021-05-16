@@ -5,11 +5,24 @@ class Game {
     val frames: List<Frame?> = _frames
 
     fun roll(pinsKnockedDown: Int) {
-        _frames.indexOfFirst { it == null }
-            .takeUnless { it == -1 }
-            ?.let { nextFramePosition ->
-                _frames[nextFramePosition] = Frame.fromRolls(Roll(pinsKnockedDown))
+        val latestFrame = _frames.lastOrNull { it != null }
+
+        when {
+            latestFrame is WithSecondRoll && latestFrame.roll2 == null -> {
+                val latestFramePosition = _frames.lastIndexOf(latestFrame)
+                _frames[latestFramePosition] = Frame.fromRolls(
+                    roll1 = latestFrame.roll1,
+                    roll2 = Roll(pinsKnockedDown)
+                )
             }
+            else -> {
+                _frames.indexOfFirst { it == null }
+                    .takeUnless { it == -1 }
+                    ?.let { nextFramePosition ->
+                        _frames[nextFramePosition] = Frame.fromRolls(Roll(pinsKnockedDown))
+                    }
+            }
+        }
     }
 
     fun score(): Int = frames.sumOf { it?.score ?: 0 }
