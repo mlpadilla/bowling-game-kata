@@ -193,14 +193,11 @@ class GameTest : BehaviorSpec({
         }
     }
 
-    // In the tenth frame a player who rolls a spare or strike is allowed to roll the extra balls to complete the frame.
-    //TODO Update Game tests for roll/frame update sequence considering newly defined rules.
-    // Then enable these tests.
-    xgiven("a game on the tenth frame") {
-        `xwhen`("a player who rolls spare") {
+    given("a game on the tenth frame") {
+        `when`("a player who rolls spare") {
             val game = Game()
-            for(i in 0..8) {
-                game.roll(pinsKnockedDown = 10)
+            for(i in 0..17) {
+                game.roll(pinsKnockedDown = 4)
             }
             game.roll(pinsKnockedDown = 2)
             game.roll(pinsKnockedDown = 8)
@@ -210,7 +207,7 @@ class GameTest : BehaviorSpec({
                 tenthFrame.roll2!!.pinsKnockedDown shouldBe 8
                 tenthFrame.nextRoll shouldBe null
             }
-            xthen("is allowed to roll the extra ball to complete the frame") {
+            then("is allowed to roll the extra ball to complete the frame") {
                 game.roll(3)
                 game.frames[9].let { tenthFrame ->
                     tenthFrame.shouldBeInstanceOf<Frame.FrameWithSpareBonus>()
@@ -219,16 +216,22 @@ class GameTest : BehaviorSpec({
                     tenthFrame.nextRoll!!.pinsKnockedDown shouldBe 3
                 }
             }
+            then("the tenth frame's score should be 2+8+3=13") {
+                game.frames[9]!!.score shouldBe 13
+            }
+            then("the game score should be 72+13=85") {
+                game.score() shouldBe 85
+            }
         }
-        `xwhen`("a player who rolls strike") {
+        `when`("a player who rolls strike") {
             val game = Game()
-            for(i in 0..8) {
-                game.roll(pinsKnockedDown = 10)
+            for(i in 0..17) {
+                game.roll(pinsKnockedDown = 4)
             }
             game.roll(pinsKnockedDown = 10)
             game.frames[9].let { tenthFrame ->
                 tenthFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
-                tenthFrame.roll1!!.pinsKnockedDown shouldBe 2
+                tenthFrame.roll1!!.pinsKnockedDown shouldBe 10
                 tenthFrame.nextRoll shouldBe null
                 tenthFrame.nextSecondRoll shouldBe null
             }
@@ -236,17 +239,23 @@ class GameTest : BehaviorSpec({
                 game.roll(3)
                 game.frames[9].let { tenthFrame ->
                     tenthFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
-                    tenthFrame.roll1!!.pinsKnockedDown shouldBe 2
-                    tenthFrame.nextRoll shouldBe 3
+                    tenthFrame.roll1!!.pinsKnockedDown shouldBe 10
+                    tenthFrame.nextRoll!!.pinsKnockedDown shouldBe 3
                     tenthFrame.nextSecondRoll shouldBe null
                 }
                 game.roll(4)
                 game.frames[9].let { tenthFrame ->
                     tenthFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
-                    tenthFrame.roll1!!.pinsKnockedDown shouldBe 2
-                    tenthFrame.nextRoll shouldBe 3
-                    tenthFrame.nextSecondRoll shouldBe 4
+                    tenthFrame.roll1!!.pinsKnockedDown shouldBe 10
+                    tenthFrame.nextRoll!!.pinsKnockedDown shouldBe 3
+                    tenthFrame.nextSecondRoll!!.pinsKnockedDown shouldBe 4
                 }
+            }
+            then("the tenth frame's score should be 10+3+4=17") {
+                game.frames[9]!!.score shouldBe 17
+            }
+            then("the game score should be 72+17=89") {
+                game.score() shouldBe 89
             }
         }
     }
