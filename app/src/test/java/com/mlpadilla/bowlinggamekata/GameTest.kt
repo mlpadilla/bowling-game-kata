@@ -99,6 +99,27 @@ class GameTest : BehaviorSpec({
                 game.score() shouldBe 10
             }
         }
+        `when`("registering another roll of 3 points") {
+            game.roll(pinsKnockedDown = 3)
+            then("a new frame registers the roll") {
+                game.frames[1]!!.let { secondFrame ->
+                    secondFrame.roll1!!.pinsKnockedDown shouldBe 3
+                    secondFrame.score shouldBe 3
+                }
+            }
+            then("the spare frame registers a 3-points bonus") {
+                game.frames.first()!!.let { firstFrame ->
+                    firstFrame.shouldBeInstanceOf<Frame.FrameWithSpareBonus>()
+                    firstFrame.roll1!!.pinsKnockedDown shouldBe 2
+                    firstFrame.roll2!!.pinsKnockedDown shouldBe 8
+                    firstFrame.nextRoll!!.pinsKnockedDown shouldBe 3
+                    firstFrame.score shouldBe 13
+                }
+            }
+            then("the game score should be (2+8+3)+3=16") {
+                game.score() shouldBe 16
+            }
+        }
     }
 
     given("a game (that will register a strike)") {
@@ -106,12 +127,11 @@ class GameTest : BehaviorSpec({
         `when`("registering two rolls knocking down 10 and 8 pins") {
             game.roll(10)
             game.roll(8)
+            val firstFrame = game.frames.first()!!
             then("the first frame is a strike") {
-                game.frames.first()!!.let { firstFrame ->
-                    firstFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
-                    firstFrame.roll1!!.pinsKnockedDown shouldBe 10
-                    firstFrame.score shouldBe 10
-                }
+                firstFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+                firstFrame.roll1!!.pinsKnockedDown shouldBe 10
+                firstFrame.score shouldBe 18
             }
             then("the second frame has a first roll of 8 points") {
                 game.frames[1]!!.let { secondFrame ->
@@ -119,11 +139,56 @@ class GameTest : BehaviorSpec({
                     secondFrame.score shouldBe 8
                 }
             }
+            then("the strike registers an 8-points bonus") {
+                firstFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+                firstFrame.nextRoll!!.pinsKnockedDown shouldBe 8
+                firstFrame.bonus shouldBe 8
+            }
             then("the game registers two frames in total") {
                 game.frames.filterNotNull().size shouldBe 2
             }
-            then("rolls are registered in the game score") {
-                game.score() shouldBe 18
+            then("rolls are registered in the game score: (10+8)+8=26") {
+                game.score() shouldBe 26
+            }
+        }
+    }
+
+    given("a game (that will register two strikes in a row)") {
+        val game = Game()
+        `when`("registering three rolls knocking down 10, 10 and 2 pins each") {
+            game.roll(pinsKnockedDown = 10)
+            game.roll(pinsKnockedDown = 10)
+            game.roll(pinsKnockedDown = 2)
+            then("the first frame is a strike and has a 10-points and 8-points bonus") {
+                game.frames.first()!!.let { firstFrame ->
+                    firstFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+                    firstFrame.roll1!!.pinsKnockedDown shouldBe 10
+                    firstFrame.nextRoll!!.pinsKnockedDown shouldBe 10
+                    firstFrame.nextSecondRoll!!.pinsKnockedDown shouldBe 2
+                    firstFrame.bonus shouldBe 12
+                    firstFrame.score shouldBe 22
+                }
+            }
+            then("the second frame is a strike and has an 8-points bonus") {
+                game.frames[1]!!.let { secondFrame ->
+                    secondFrame.shouldBeInstanceOf<Frame.FrameWithStrikeBonus>()
+                    secondFrame.roll1!!.pinsKnockedDown shouldBe 10
+                    secondFrame.nextRoll!!.pinsKnockedDown shouldBe 2
+                    secondFrame.nextSecondRoll shouldBe null
+                    secondFrame.bonus shouldBe 2
+                    secondFrame.score shouldBe 12
+                }
+            }
+            then("the third frame has no bonus and only a first roll of 8 points") {
+                game.frames[2]!!.let { thirdFrame ->
+                    thirdFrame.shouldBeInstanceOf<Frame.FrameWithNoBonus>()
+                    thirdFrame.roll1!!.pinsKnockedDown shouldBe 2
+                    thirdFrame.roll2 shouldBe null
+                    thirdFrame.score shouldBe 2
+                }
+            }
+            then("rolls are registered in the game score: (10+10+2)+(10+2)+2=36") {
+                game.score() shouldBe 36
             }
         }
     }
